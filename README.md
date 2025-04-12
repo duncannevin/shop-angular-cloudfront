@@ -8,7 +8,8 @@ Repo maintainers:
 
 ## Deployed Site
 
-https://d13fj8tds22ilq.cloudfront.net/
+- [CloudFront URL](https://d13fj8tds22ilq.cloudfront.net/)
+- [S3 URL](https://deployshopstack-deploymentshopbucket58d24078-xerfe1j5m5vj.s3.us-west-2.amazonaws.com/index.html)
 
 ## The purpose
 
