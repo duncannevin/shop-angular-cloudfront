@@ -1,0 +1,38 @@
+name: Deploy Angular + CDK
+
+on:
+  workflow_dispatch: # Allows manual trigger from GitHub UI
+
+jobs:
+  deploy:
+    name: Build & Deploy
+    runs-on: ubuntu-latest
+
+    env:
+      AWS_REGION: us-west-2 # Change as needed
+      CDK_APP_PATH: npx ts-node infrastructure/bin/infra.ts
+
+    steps:
+      - name: ⬇️ Checkout source
+        uses: actions/checkout@v3
+
+      - name: ⚙️ Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: 📦 Install dependencies
+        run: npm ci
+
+      - name: 🔨 Build Angular App
+        run: npm run build # Assumes your script is set as "build": "ng build"
+
+      - name: 🔧 Setup AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: 🚀 Deploy with CDK
+        run: npx cdk deploy --app "${{ env.CDK_APP_PATH }}" --require-approval never
