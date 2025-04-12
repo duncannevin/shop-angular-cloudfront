@@ -36,5 +36,8 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }}
 
+      - name: 🧱 CDK Bootstrap
+        run: npx cdk bootstrap aws://$(aws sts get-caller-identity --query Account --output text)/${{ env.AWS_REGION }}
+
       - name: 🚀 Deploy with CDK
         run: npx cdk deploy --app "${{ env.CDK_APP_PATH }}" --require-approval never
