@@ -15,7 +15,7 @@ export class DeploymentService extends Construct {
     super(scope, id);
 
     const hostingBucket = new aws_s3.Bucket(this, 'ShopBucket', {
-      blockPublicAccess: aws_s3.BlockPublicAccess.BLOCK_ACLS,
+      blockPublicAccess: aws_s3.BlockPublicAccess.BLOCK_ALL,
       removalPolicy: RemovalPolicy.DESTROY,
     });
 

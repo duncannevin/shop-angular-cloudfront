@@ -10,6 +10,7 @@
 # CDK
 /cdk.out
 *.template.*
+/resources/*.txt
 
 # dependencies
 /node_modules
