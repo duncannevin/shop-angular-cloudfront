@@ -7,9 +7,8 @@ import {
   CfnOutput,
   RemovalPolicy,
 } from 'aws-cdk-lib';
-import path from 'node:path';
 
-const dist = path.resolve(__dirname, '..', 'resources/browser');
+const dist = 'infrastructure/resources/browser';
 
 export class DeploymentService extends Construct {
   constructor(scope: Construct, id: string) {

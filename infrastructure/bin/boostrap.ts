@@ -12,10 +12,10 @@ rl.question('Enter your AWS account number: ', (accountNumber) => {
       `Bootstrapping AWS CDK in account ${accountNumber} and region ${region}...this may take a few minutes.`,
     );
     exec(
-      `cdk bootstrap aws://${accountNumber}/${region}`,
+      `cdk bootstrap aws://${accountNumber}/${region} --app "npx ts-node infrastructure/bin/infra.ts"`,
       (err, stdout, stderr) => {
         if (err) {
-          // node couldn't execute the command
+          console.error(`Error executing command: ${err}`);
           return;
         }
 
