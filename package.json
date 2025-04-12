@@ -4,7 +4,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build",
+    "build": "ng build --configuration production --optimization",
     "cdk:deploy": "cdk deploy --app \"ts-node infrastructure/bin/infra.ts\"",
     "cdk:diff": "cdk diff --app \"ts-node infrastructure/bin/infra.ts\"",
     "cdk:synth": "cdk synth --app \"ts-node infrastructure/bin/infra.ts\" > ShopStack.template.yaml",
