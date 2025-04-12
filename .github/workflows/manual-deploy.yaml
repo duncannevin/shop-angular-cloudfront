@@ -2,6 +2,11 @@ name: Deploy Angular + CDK
 
 on:
   workflow_dispatch:
+  workflow_call:
+    inputs:
+      AWS_REGION: { required: true, type: string }
+      AWS_ACCESS_KEY_ID: { required: true, type: string }
+      AWS_SECRET_ACCESS_KEY: { required: true, type: string }
 
 jobs:
   deploy:
