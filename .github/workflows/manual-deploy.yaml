@@ -1,7 +1,12 @@
 name: Deploy Angular + CDK
 
 on:
-  workflow_dispatch: # Allows manual trigger from GitHub UI
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: "Branch to deploy"
+        required: true
+        default: "main"
 
 jobs:
   deploy:
@@ -15,6 +20,8 @@ jobs:
     steps:
       - name: ⬇️ Checkout source
         uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.inputs.branch }}
 
       - name: ⚙️ Setup Node.js
         uses: actions/setup-node@v3
