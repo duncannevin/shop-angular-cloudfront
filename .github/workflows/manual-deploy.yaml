@@ -2,6 +2,12 @@ name: Deploy Angular + CDK
 
 on:
   workflow_dispatch:
+    inputs:
+      bootstrap:
+        description: "Run CDK bootstrap?"
+        required: false
+        default: false
+        type: boolean
 
 jobs:
   deploy:
@@ -36,7 +42,8 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }}
 
-      - name: 🧱 CDK Bootstrap
+      - name: 🧱 CDK Bootstrap (Conditional)
+        if: ${{ github.event.inputs.bootstrap == true }}
         run: npx cdk bootstrap aws://$(aws sts get-caller-identity --query Account --output text)/${{ env.AWS_REGION }}
 
       - name: 🚀 Deploy with CDK
