@@ -30,6 +30,10 @@ Follow the steps:
 - npm i
 - ng serve
 
+## Deploy
+
+Checkou the [DEPLOY.md](DEPLOY.md) file for the instructions on how to deploy the app to AWS.
+
 ## Troubleshooting
 
 ### Cannot commit
