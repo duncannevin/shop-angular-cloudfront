@@ -6,7 +6,7 @@ on:
       bootstrap:
         description: "Run CDK bootstrap?"
         required: false
-        default: false
+        default: "false"
         type: boolean
 
 jobs:
@@ -43,7 +43,7 @@ jobs:
           aws-region: ${{ env.AWS_REGION }}
 
       - name: 🧱 CDK Bootstrap (Conditional)
-        if: ${{ github.event.inputs.bootstrap == true }}
+        if: ${{ github.event.inputs.bootstrap == 'true' }}
         run: npx cdk bootstrap aws://$(aws sts get-caller-identity --query Account --output text)/${{ env.AWS_REGION }}
 
       - name: 🚀 Deploy with CDK
