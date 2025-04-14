@@ -1,0 +1,42 @@
+name: Destroy CDK Stack
+
+on:
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: "Branch to destroy"
+        required: true
+        default: "main"
+
+jobs:
+  destroy:
+    name: Destroy CDK Stack
+    runs-on: ubuntu-latest
+
+    env:
+      AWS_REGION: us-west-2
+      CDK_APP_PATH: npx ts-node infrastructure/bin/infra.ts
+
+    steps:
+      - name: ⬇️ Checkout source
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.inputs.branch }}
+
+      - name: ⚙️ Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: 📦 Install dependencies
+        run: npm ci
+
+      - name: 🔧 Setup AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: 💣 Destroy CDK Stack
+        run: npx cdk destroy --app "${{ env.CDK_APP_PATH }}" --force

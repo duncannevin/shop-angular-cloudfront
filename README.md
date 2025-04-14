@@ -6,6 +6,11 @@ Repo maintainers:
 
 - [Sergey Gultyayev](https://github.com/gultyayev)
 
+## Deployed Site
+
+- [CloudFront URL](https://d13fj8tds22ilq.cloudfront.net/)
+- [S3 URL](https://deployshopstack-deploymentshopbucket58d24078-xerfe1j5m5vj.s3.us-west-2.amazonaws.com/index.html)
+
 ## The purpose
 
 The repository was created to have an Angular version of e-shop for EPAM NodeJS AWS course. At the same time we strive to make this repository follows best practices so it may be used as a starter for new projects with all the necessary toolings already set up.
@@ -29,6 +34,10 @@ Follow the steps:
 - git clone
 - npm i
 - ng serve
+
+## Deploy
+
+Checkou the [DEPLOY.md](DEPLOY.md) file for the instructions on how to deploy the app to AWS.
 
 ## Troubleshooting
 
