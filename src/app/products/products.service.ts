@@ -56,15 +56,36 @@ export class ProductsService extends ApiService {
   }
 
   getProducts(): Observable<Product[]> {
-    if (!this.endpointEnabled('bff')) {
+    if (!this.endpointEnabled('product')) {
       console.warn(
-        'Endpoint "bff" is disabled. To enable change your environment.ts config',
+        'Endpoint "product" is disabled. To enable change your environment.ts config',
       );
       return this.http.get<Product[]>('/assets/products.json');
     }
 
-    const url = this.getUrl('bff', 'products');
-    return this.http.get<Product[]>(url);
+    const url = this.getUrl('product', 'products');
+    return this.http
+      .get<{
+        data: {
+          category: string;
+          inStock: boolean;
+          id: string;
+          name: string;
+          price: number;
+        }[];
+      }>(url)
+      .pipe(
+        // TODO: update the entire project to use the new product interface
+        map((resp) =>
+          resp.data.map(({ category, id, price, name }) => ({
+            title: name,
+            id,
+            price,
+            description: category,
+            count: 1,
+          })),
+        ),
+      );
   }
 
   getProductsForCheckout(ids: string[]): Observable<Product[]> {
