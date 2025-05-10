@@ -1,10 +1,10 @@
 export interface Product {
   /** Available count */
-  count: number;
-  description: string;
   id: string;
+  count: number;
   price: number;
   title: string;
+  description: string;
 }
 
 export interface ProductCheckout extends Product {
