@@ -13,11 +13,17 @@ import {
 } from '@angular/common/http';
 import { provideRouter, withComponentInputBinding } from '@angular/router';
 import { appRoutes } from './app/app-routes';
+import { SecureCallInterceptor } from './app/core/interceptors/secure-call-interceptor';
 
 const interceptors: Provider[] = [
   {
     provide: HTTP_INTERCEPTORS,
     useClass: ErrorPrintInterceptor,
+    multi: true,
+  },
+  {
+    provide: HTTP_INTERCEPTORS,
+    useClass: SecureCallInterceptor,
     multi: true,
   },
 ];
