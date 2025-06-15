@@ -23,6 +23,8 @@ import { MatCard, MatCardContent, MatCardTitle } from '@angular/material/card';
 import { AsyncPipe } from '@angular/common';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ShippingInfo } from './shipping-info.interface';
+import { tap } from 'rxjs/operators';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-cart',
@@ -55,6 +57,7 @@ export class CartComponent implements OnInit {
   private readonly fb = inject(UntypedFormBuilder);
   private readonly checkoutService = inject(CheckoutService);
   private readonly cartService = inject(CartService);
+  private readonly router = inject(Router);
 
   ngOnInit() {
     this.cartService.createOrGetCart();
@@ -109,6 +112,13 @@ export class CartComponent implements OnInit {
   }
 
   placeOrder() {
-    this.checkoutService.checkout(this.shippingInfo.value as ShippingInfo);
+    this.checkoutService
+      .checkout(this.shippingInfo.value as ShippingInfo)
+      .pipe(
+        tap(() => {
+          this.router.navigate(['admin', 'orders']);
+        }),
+      )
+      .subscribe();
   }
 }
