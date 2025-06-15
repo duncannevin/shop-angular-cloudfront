@@ -22,6 +22,7 @@ import {
 import { MatCard, MatCardContent, MatCardTitle } from '@angular/material/card';
 import { AsyncPipe } from '@angular/common';
 import { toSignal } from '@angular/core/rxjs-interop';
+import { ShippingInfo } from './shipping-info.interface';
 
 @Component({
   selector: 'app-cart',
@@ -108,6 +109,6 @@ export class CartComponent implements OnInit {
   }
 
   placeOrder() {
-    console.log('place order');
+    this.checkoutService.checkout(this.shippingInfo.value as ShippingInfo);
   }
 }

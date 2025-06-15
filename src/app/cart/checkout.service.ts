@@ -4,13 +4,24 @@ import { ProductsService } from '../products/products.service';
 import { Observable, switchMap } from 'rxjs';
 import { ProductCheckout } from '../products/product.interface';
 import { map } from 'rxjs/operators';
+import { ShippingInfo } from './shipping-info.interface';
+import { ApiService } from '../core/api.service';
 
 @Injectable({
   providedIn: 'root',
 })
-export class CheckoutService {
+export class CheckoutService extends ApiService {
+  orderUrl = this.getUrl('order', ``);
+
   private readonly cartService = inject(CartService);
   private readonly productsService = inject(ProductsService);
+
+  checkout(shippingInfo: ShippingInfo) {
+    this.http
+      .put(this.orderUrl, { items: this.cartService.cart(), shippingInfo })
+      .pipe(map(() => this.cartService.empty()))
+      .subscribe();
+  }
 
   getProductsForCheckout(): Observable<ProductCheckout[]> {
     return this.cartService.cart$.pipe(

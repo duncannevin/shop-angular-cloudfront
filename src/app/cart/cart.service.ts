@@ -16,7 +16,6 @@ export interface CartItem {
 })
 export class CartService extends ApiService {
   cartUrl = this.getUrl('cart', ``);
-  orderUrl = this.getUrl('order', ``);
 
   /** Key - item id, value - ordered amount */
   #cart = signal<Record<string, number>>({});
