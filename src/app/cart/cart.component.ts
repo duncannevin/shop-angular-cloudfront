@@ -3,6 +3,7 @@ import {
   Component,
   computed,
   inject,
+  OnInit,
 } from '@angular/core';
 import { UntypedFormBuilder, Validators } from '@angular/forms';
 import { STEPPER_GLOBAL_OPTIONS } from '@angular/cdk/stepper';
@@ -49,10 +50,14 @@ import { toSignal } from '@angular/core/rxjs-interop';
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CartComponent {
+export class CartComponent implements OnInit {
   private readonly fb = inject(UntypedFormBuilder);
   private readonly checkoutService = inject(CheckoutService);
   private readonly cartService = inject(CartService);
+
+  ngOnInit() {
+    this.cartService.createOrGetCart();
+  }
 
   products = toSignal(this.checkoutService.getProductsForCheckout(), {
     initialValue: [],
@@ -89,10 +94,17 @@ export class CartComponent {
   }
 
   add(id: string): void {
-    this.cartService.addItem(id);
+    const product = this.products().find((p) => p.id === id);
+    if (product) {
+      this.cartService.addItem(product);
+    }
   }
 
   remove(id: string): void {
     this.cartService.removeItem(id);
+  }
+
+  placeOrder() {
+    console.log('place order');
   }
 }
