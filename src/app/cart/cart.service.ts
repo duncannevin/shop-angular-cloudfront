@@ -99,7 +99,16 @@ export class CartService extends ApiService {
   }
 
   empty(): void {
-    this.#cart.set({});
+    this.http
+      .delete(this.cartUrl)
+      .pipe(
+        tap(() => {
+          console.log('Cart emptied successfully');
+          this.#cart.set({});
+        }),
+        take(1),
+      )
+      .subscribe();
   }
 
   private updateCount(id: string, type: 1 | -1): void {
