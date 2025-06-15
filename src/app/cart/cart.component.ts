@@ -3,6 +3,7 @@ import {
   Component,
   computed,
   inject,
+  OnInit,
 } from '@angular/core';
 import { UntypedFormBuilder, Validators } from '@angular/forms';
 import { STEPPER_GLOBAL_OPTIONS } from '@angular/cdk/stepper';
@@ -21,6 +22,9 @@ import {
 import { MatCard, MatCardContent, MatCardTitle } from '@angular/material/card';
 import { AsyncPipe } from '@angular/common';
 import { toSignal } from '@angular/core/rxjs-interop';
+import { ShippingInfo } from './shipping-info.interface';
+import { tap } from 'rxjs/operators';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-cart',
@@ -49,10 +53,15 @@ import { toSignal } from '@angular/core/rxjs-interop';
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CartComponent {
+export class CartComponent implements OnInit {
   private readonly fb = inject(UntypedFormBuilder);
   private readonly checkoutService = inject(CheckoutService);
   private readonly cartService = inject(CartService);
+  private readonly router = inject(Router);
+
+  ngOnInit() {
+    this.cartService.createOrGetCart();
+  }
 
   products = toSignal(this.checkoutService.getProductsForCheckout(), {
     initialValue: [],
@@ -89,10 +98,27 @@ export class CartComponent {
   }
 
   add(id: string): void {
-    this.cartService.addItem(id);
+    const product = this.products().find((p) => p.id === id);
+    if (product) {
+      this.cartService.addItem(product);
+    }
   }
 
   remove(id: string): void {
-    this.cartService.removeItem(id);
+    const product = this.products().find((p) => p.id === id);
+    if (product) {
+      this.cartService.removeItem(product);
+    }
+  }
+
+  placeOrder() {
+    this.checkoutService
+      .checkout(this.shippingInfo.value as ShippingInfo)
+      .pipe(
+        tap(() => {
+          this.router.navigate(['admin', 'orders']);
+        }),
+      )
+      .subscribe();
   }
 }
