@@ -80,7 +80,7 @@ export class ProductItemComponent {
   }
 
   remove(): void {
-    this.#cartService.removeItem(this.id);
+    this.#cartService.removeItem(this.product());
   }
 
   /** Move focus to a corresponding control when controls switch */

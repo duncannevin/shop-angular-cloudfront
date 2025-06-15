@@ -58,27 +58,44 @@ export class CartService extends ApiService {
     return values.reduce((acc, val) => acc + val, 0);
   });
 
-  addItem(product: Product): void {
-    this.updateCount(product.id, 1);
-
-    if (this.debounceTimers.has(product.id)) {
+  private doDebounced(
+    whereFrom: string,
+    product: Product,
+    doFn: () => void,
+  ): void {
+    if (this.debounceTimers.has(`${whereFrom}-${product.id}`)) {
       clearTimeout(this.debounceTimers.get(product.id)!);
     }
 
     const timer = setTimeout(() => {
-      this.http
-        .put(this.cartUrl, { product, count: this.cart()[product.id] })
-        .subscribe(() => {
-          console.log(`Backend updated for product: ${product.id}`);
-        });
+      doFn();
+
       this.debounceTimers.delete(product.id); // Remove the timer after the call
     }, 500); // Adjust debounce time as needed
 
     this.debounceTimers.set(product.id, timer);
   }
 
-  removeItem(id: string): void {
-    this.updateCount(id, -1);
+  addItem(product: Product): void {
+    this.updateCount(product.id, 1);
+
+    this.doDebounced('addItem', product, () => {
+      const count = this.cart()[product.id];
+      this.http.put(this.cartUrl, { product, count }).subscribe(() => {
+        console.log(`Backend updated for product: ${product.id}`);
+      });
+    });
+  }
+
+  removeItem(product: Product): void {
+    this.updateCount(product.id, -1);
+
+    this.doDebounced('addItem', product, () => {
+      const count = this.cart()[product.id];
+      this.http.put(this.cartUrl, { product, count }).subscribe(() => {
+        console.log(`Backend updated for product: ${product.id}`);
+      });
+    });
   }
 
   empty(): void {

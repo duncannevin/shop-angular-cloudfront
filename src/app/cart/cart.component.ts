@@ -101,7 +101,10 @@ export class CartComponent implements OnInit {
   }
 
   remove(id: string): void {
-    this.cartService.removeItem(id);
+    const product = this.products().find((p) => p.id === id);
+    if (product) {
+      this.cartService.removeItem(product);
+    }
   }
 
   placeOrder() {
