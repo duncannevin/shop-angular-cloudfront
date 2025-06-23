@@ -7,13 +7,21 @@ import {
 } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { NotificationService } from '../notification.service';
-import { tap } from 'rxjs/operators';
+import { SpinnerService } from '../spinner/spinner.service';
+import { tap, finalize } from 'rxjs/operators';
 
-const SECURE_ENDPOINTS = ['products/import'];
+const SECURE_ENDPOINTS = [
+  'products/import',
+  'api/profile/cart',
+  'api/profile/cart/order',
+];
 
 @Injectable()
 export class SecureCallInterceptor implements HttpInterceptor {
-  constructor(private readonly notificationService: NotificationService) {}
+  constructor(
+    private readonly notificationService: NotificationService,
+    private readonly spinnerService: SpinnerService,
+  ) {}
 
   intercept(
     request: HttpRequest<unknown>,
@@ -48,6 +56,9 @@ export class SecureCallInterceptor implements HttpInterceptor {
       });
     }
 
+    // Increment spinner counter
+    this.spinnerService.show();
+
     return next.handle(request).pipe(
       tap({
         error: () => {
@@ -56,6 +67,10 @@ export class SecureCallInterceptor implements HttpInterceptor {
             0,
           );
         },
+      }),
+      finalize(() => {
+        // Decrement spinner counter
+        this.spinnerService.hide();
       }),
     );
   }
